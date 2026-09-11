@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "config:supabase": "node scripts/generate-supabase-config.mjs",
-    "test": "node --test --test-isolation=none",
+    "test": "node --test",
     "check:js": "node scripts/check-js.mjs",
     "pwa:check": "node scripts/pwa-version.mjs --check",
     "pwa:bump": "node scripts/pwa-version.mjs --bump",
