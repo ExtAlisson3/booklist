@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "BookList Clipper",
+  "version": "1.0.1",
+  "description": "Salva bookmarks e captura páginas para o BookList (local + Supabase).",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "contextMenus",
+    "scripting",
+    "alarms"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Salvar no BookList"
+  },
+  "background": {
+    "service_worker": "background.js"
+  }
+}

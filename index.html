@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="BookList - Organize seus links favoritos e notas em um só lugar. Aplicação portátil e leve.">
+    <title>BookList - Links & Notas</title>
+    <link rel="stylesheet" href="css/style.css?v=102">
+    <link rel="stylesheet" href="css/extensions.css?v=102">
+    <link rel="stylesheet" href="css/modern-ui.css?v=102">
+    <link rel="stylesheet" href="css/command-palette.css?v=102">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
+</head>
+<body>
+    <!-- Navigation Sidebar -->
+    <nav class="app-nav" id="app-nav">
+        <div class="nav-brand">
+            <div class="nav-logo">&#128218;</div>
+            <div class="nav-brand-copy"><strong>BookList</strong><span>Seu espaço organizado</span></div>
+            <button class="nav-collapse" type="button" onclick="App.toggleNavigation()" aria-label="Alternar menu lateral" title="Alternar menu">&#10094;</button>
+        </div>
+
+        <button class="nav-item active" data-page="dashboard" onclick="App.navigate('dashboard')" id="nav-dashboard">
+            &#127968;
+            <span class="nav-tooltip">Dashboard</span>
+        </button>
+
+        <button class="nav-item" data-page="today-center" onclick="App.navigate('today-center')" id="nav-today-center">&#9673;<span class="nav-tooltip">Hoje e Pendências</span></button>
+
+        <button class="nav-item" data-page="bookmarks" onclick="App.navigate('bookmarks')" id="nav-bookmarks">
+            &#128278;
+            <span class="nav-tooltip">Bookmarks</span>
+        </button>
+
+        <button class="nav-item" data-page="notes" onclick="App.navigate('notes')" id="nav-notes">
+            &#128221;
+            <span class="nav-tooltip">Notas</span>
+        </button>
+
+        <button class="nav-item" data-page="power" onclick="App.navigate('power')" id="nav-power">
+            &#9889;
+            <span class="nav-tooltip">Power Hub</span>
+        </button>
+
+        <button class="nav-item mui-nav-graph" id="nav-graph" onclick="App.showGraph()" title="Cérebro Digital">
+            &#128302;
+            <span class="nav-tooltip">Cérebro Digital</span>
+        </button>
+
+        <button class="nav-item mui-nav-split" id="nav-split" onclick="App.toggleSplitView()" title="Dividir Tela">
+            &#9638;
+            <span class="nav-tooltip">Dividir Tela</span>
+        </button>
+
+        <div class="nav-divider"></div>
+
+        <div class="nav-section nav-flyout-section" data-nav-group="personal">
+            <button class="nav-group-trigger" type="button" onclick="App.toggleNavGroup('personal')" aria-expanded="false" aria-controls="nav-group-personal">
+                <span class="nav-group-icon">&#10024;</span>
+                <span class="nav-tooltip">Pessoal</span>
+                <span class="nav-group-chevron" aria-hidden="true">&#8964;</span>
+            </button>
+            <div class="nav-section-grid nav-flyout" id="nav-group-personal" role="menu" aria-label="Menu pessoal">
+                <span class="nav-section-title">Vida pessoal</span>
+                <button class="nav-item" data-page="personal" onclick="App.navigate('personal')" id="nav-personal">
+                    &#10024;
+                    <span class="nav-tooltip">Visão Pessoal</span>
+                </button>
+                <button class="nav-item" data-page="journal" onclick="App.navigate('journal')" id="nav-journal">
+                    &#128214;
+                    <span class="nav-tooltip">Diário</span>
+                </button>
+                <button class="nav-item" data-page="habits" onclick="App.navigate('habits')" id="nav-habits">
+                    &#10003;
+                    <span class="nav-tooltip">Hábitos</span>
+                </button>
+                <button class="nav-item" data-page="goals" onclick="App.navigate('goals')" id="nav-goals">
+                    &#9678;
+                    <span class="nav-tooltip">Metas</span>
+                </button>
+                <button class="nav-item" data-page="personal-inbox" onclick="App.navigate('personal-inbox')" id="nav-personal-inbox">
+                    &#128229;
+                    <span class="nav-tooltip">Inbox Pessoal</span>
+                </button>
+                <button class="nav-item" data-page="tracker" onclick="App.navigate('tracker')" id="nav-tracker">
+                    &#128218;
+                    <span class="nav-tooltip">Mídias</span>
+                </button>
+
+                <button class="nav-item" data-page="money" onclick="App.navigate('money')" id="nav-money">
+                    &#128184;
+                    <span class="nav-tooltip">Money Pessoal</span>
+                </button>
+
+            </div>
+        </div>
+
+        <div class="nav-divider"></div>
+
+        <div class="nav-section nav-flyout-section" data-nav-group="technical">
+            <button class="nav-group-trigger" type="button" onclick="App.toggleNavGroup('technical')" aria-expanded="false" aria-controls="nav-group-technical">
+                <span class="nav-group-icon">&#128736;</span>
+                <span class="nav-tooltip">Técnico</span>
+                <span class="nav-group-chevron" aria-hidden="true">&#8964;</span>
+            </button>
+            <div class="nav-section-grid nav-flyout" id="nav-group-technical" role="menu" aria-label="Menu técnico">
+                <span class="nav-section-title">Operação técnica</span>
+                <button class="nav-item" data-page="tech" onclick="App.navigate('tech')" id="nav-tech">
+                    &#128736;
+                    <span class="nav-tooltip">Técnico OS</span>
+                </button>
+                <button class="nav-item" data-page="os360" onclick="App.navigate('os360')" id="nav-os360">&#8858;<span class="nav-tooltip">OS 360</span></button>
+
+                <button class="nav-item" data-page="clients" onclick="App.navigate('clients')" id="nav-clients">
+                    &#128101;
+                    <span class="nav-tooltip">Clientes</span>
+                </button>
+
+                <button class="nav-item" data-page="equipment" onclick="App.navigate('equipment')" id="nav-equipment">
+                    &#128187;
+                    <span class="nav-tooltip">Equipamentos</span>
+                </button>
+
+                <button class="nav-item" data-page="tickets" onclick="App.navigate('tickets')" id="nav-tickets">
+                    &#128295;
+                    <span class="nav-tooltip">Atendimentos</span>
+                </button>
+
+                <button class="nav-item" data-page="knowledge" onclick="App.navigate('knowledge')" id="nav-knowledge">
+                    &#129504;
+                    <span class="nav-tooltip">Base Técnica</span>
+                </button>
+
+                <button class="nav-item" data-page="runbooks" onclick="App.navigate('runbooks')" id="nav-runbooks">
+                    &#9989;
+                    <span class="nav-tooltip">Runbooks</span>
+                </button>
+
+                <button class="nav-item" data-page="budgets" onclick="App.navigate('budgets')" id="nav-budgets">
+                    &#129534;
+                    <span class="nav-tooltip">Orçamentos</span>
+                </button>
+
+                <button class="nav-item" data-page="finance" onclick="App.navigate('finance')" id="nav-finance">
+                    &#128176;
+                    <span class="nav-tooltip">Financeiro</span>
+                </button>
+
+                <button class="nav-item" data-page="schedule" onclick="App.navigate('schedule')" id="nav-schedule">
+                    &#128197;
+                    <span class="nav-tooltip">Agenda Técnica</span>
+                </button>
+
+                <button class="nav-item" data-page="scripts" onclick="App.navigate('scripts')" id="nav-scripts">
+                    &#9000;
+                    <span class="nav-tooltip">Scripts</span>
+                </button>
+
+                <button class="nav-item" data-page="toolbox" onclick="App.navigate('toolbox')" id="nav-toolbox">
+                    &#129520;
+                    <span class="nav-tooltip">Ferramentas</span>
+                </button>
+
+                <button class="nav-item" data-page="networks" onclick="App.navigate('networks')" id="nav-networks">
+                    &#127760;
+                    <span class="nav-tooltip">Redes</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="nav-spacer"></div>
+
+        <div id="workspace-context-toggle" class="workspace-context-toggle" aria-label="Modo contexto"></div>
+
+        <button class="nav-item" data-page="health" onclick="App.navigate('health')" id="nav-health">
+            &#9676;
+            <span class="nav-tooltip">Saúde do Sistema</span>
+        </button>
+        <button class="nav-item" data-page="integrations" onclick="App.navigate('integrations')" id="nav-integrations">&#8644;<span class="nav-tooltip">Integrações</span></button>
+        <button class="nav-item" data-page="automation-center" onclick="App.navigate('automation-center')" id="nav-automation-center">&#9881;<span class="nav-tooltip">Automações</span></button>
+        <button class="nav-item" data-page="reports" onclick="App.navigate('reports')" id="nav-reports">&#9636;<span class="nav-tooltip">Relatórios</span></button>
+
+        <button class="nav-item nav-vault" data-page="vault" type="button" onclick="App.openVault()" id="nav-vault" title="Cofre">
+            &#128274;
+            <span class="nav-tooltip">Cofre</span>
+        </button>
+
+        <button class="nav-item" data-page="settings" onclick="App.navigate('settings')" id="nav-settings">
+            &#9881;
+            <span class="nav-tooltip">Configurações</span>
+        </button>
+    </nav>
+
+    <!-- Main Content Area -->
+    <div class="app-main">
+        <div id="main-content"></div>
+    </div>
+
+    <!-- Polyfill: crypto.randomUUID() para contextos não-seguros (HTTP) -->
+    <script>
+    if (!crypto.randomUUID) {
+        crypto.randomUUID = function() {
+            const bytes = crypto.getRandomValues(new Uint8Array(16));
+            bytes[6] = (bytes[6] & 0x0f) | 0x40;
+            bytes[8] = (bytes[8] & 0x3f) | 0x80;
+            const hex = Array.from(bytes, b => b.toString(16).padStart(2, '0'));
+            return [hex.slice(0,4).join(''), hex.slice(4,6).join(''), hex.slice(6,8).join(''), hex.slice(8,10).join(''), hex.slice(10).join('')].join('-');
+        };
+        console.log('🔧 Polyfill: crypto.randomUUID ativado (HTTP mode)');
+    }
+    </script>
+
+    <!-- Scripts -->
+    <script src="js/config.js?v=102"></script>
+    <script src="js/core.js?v=102"></script>
+    <script src="js/storage.js?v=102"></script>
+    <script>
+        (function seedIntegrations() {
+            try {
+                const modules = window.Storage?.getModules?.() || {};
+                const settings = modules.integrationSettings || {};
+                let changed = false;
+                if (!settings.tmdb?.credential) { settings.tmdb = { enabled: true, credential: 'e3531cd225b66f5fd1700b08cf0a55ce', updatedAt: new Date().toISOString() }; changed = true; }
+                if (!settings.mal?.credential) { settings.mal = { enabled: true, credential: '80714716ddda9f155f21eab4f0bc0bdd', updatedAt: new Date().toISOString() }; changed = true; }
+                if (changed) { modules.integrationSettings = settings; window.Storage?.saveModules?.(modules); }
+            } catch (e) { /* ignore */ }
+        })();
+    </script>
+    <script src="js/media.js?v=102"></script>
+    <script src="js/ai.js?v=102"></script>
+    <script src="js/bookmarks.js?v=102"></script>
+    <script src="js/notes.js?v=102"></script>
+    <script src="js/whiteboard.js?v=102" defer></script>
+    <script src="js/features.js?v=102"></script>
+    <script src="js/modules/media-catalog.js?v=102"></script>
+    <script src="js/personal.js?v=102"></script>
+    <script src="js/app.js?v=102"></script>
+    <script src="js/modules/page-router.js?v=102"></script>
+    <script src="js/modules/technical-registry.js?v=102"></script>
+    <script src="js/modules/operational-centers.js?v=102"></script>
+    <script src="js/modules/asset-loader.js?v=102"></script>
+    <script src="js/modules/accessibility.js?v=102"></script>
+    <script src="js/modules/dialogs.js?v=102"></script>
+    <script src="js/modules/storage-portability.js?v=102"></script>
+    <script src="js/modules/system-health.js?v=102"></script>
+    <script src="js/modules/command-palette.js?v=102"></script>
+    <script src="js/extensions.js?v=102"></script>
+    <script src="js/graph.js?v=102" defer></script>
+    <script src="js/modern-ui.js?v=102" defer></script>
+    <script src="js/markmap-lite.js?v=102" defer></script>
+    <script src="js/rag-chat.js?v=102" defer></script>
+    <script src="js/scanner.js?v=102" defer></script>
+    <script src="js/gamification.js?v=102" defer></script>
+    <script src="js/network-topology.js?v=102" defer></script>
+    <script>
+        if (location.protocol !== 'file:') {
+            const manifest = document.createElement('link');
+            manifest.rel = 'manifest';
+            manifest.href = 'manifest.webmanifest';
+            document.head.appendChild(manifest);
+        }
+        if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+            navigator.serviceWorker.register('sw.js').then(reg => {
+                reg.addEventListener('updatefound', () => {
+                    const sw = reg.installing;
+                    if (!sw) return;
+                    sw.addEventListener('statechange', () => {
+                        if (sw.state === 'installed' && navigator.serviceWorker.controller) {
+                            console.log('[BookList] Nova versão instalada — recarregando...');
+                            location.reload();
+                        }
+                    });
+                });
+            }).catch(() => {});
+        }
+    </script>
+</body>
+</html>

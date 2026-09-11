@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>BookList Clipper Pro</title>
+<style>
+  :root {
+    --accent: #7C4DFF;
+    --accent-glow: rgba(124, 77, 255, 0.25);
+    --bg-main: #070a13;
+    --bg-card: #0f1426;
+    --border-glass: rgba(255, 255, 255, 0.08);
+    --text-main: #f0f2f7;
+    --text-muted: #8b95b0;
+    --ease: cubic-bezier(.22,.61,.36,1);
+    color-scheme: dark;
+  }
+  
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    width: 380px;
+    padding: 16px;
+    background: var(--bg-main);
+    color: var(--text-main);
+    margin: 0;
+    overflow-x: hidden;
+  }
+  
+  h2 {
+    margin: 0 0 16px;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #7C4DFF, #00E5FF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  label {
+    display: block;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 600;
+  }
+
+  input, textarea, select {
+    width: 100%;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-main);
+    border: 1px solid var(--border-glass);
+    border-radius: 8px;
+    font-size: 13px;
+    box-sizing: border-box;
+    margin-top: 5px;
+    transition: all 0.25s var(--ease);
+    outline: none;
+  }
+
+  input:focus, textarea:focus, select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 12px var(--accent-glow);
+    background: rgba(255, 255, 255, 0.07);
+  }
+
+  select option {
+    background: #0f1426;
+    color: var(--text-main);
+  }
+
+  textarea {
+    min-height: 70px;
+    resize: vertical;
+    font-family: inherit;
+  }
+
+  .cat-chips-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+    max-height: 80px;
+    overflow-y: auto;
+    padding: 4px;
+    border: 1px solid var(--border-glass);
+    border-radius: 8px;
+    background: rgba(0,0,0,0.2);
+  }
+
+  .cat-chip {
+    padding: 4px 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-glass);
+    border-radius: 6px;
+    font-size: 11px;
+    color: var(--text-main);
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s;
+  }
+
+  .cat-chip:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .cat-chip.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 2px 8px var(--accent-glow);
+  }
+
+  button {
+    width: 100%;
+    padding: 11px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 14px;
+    font-size: 13px;
+    transition: all 0.25s var(--ease);
+  }
+
+  button:hover {
+    background: #6c3def;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(124, 77, 255, 0.3);
+  }
+
+  button:active {
+    transform: translateY(0);
+  }
+
+  button.secondary {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-glass);
+    color: var(--text-main);
+    margin-top: 0;
+  }
+
+  button.secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: none;
+  }
+
+  .row {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .row > * {
+    flex: 1;
+    margin-top: 0;
+  }
+
+  .status {
+    margin-top: 12px;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    display: none;
+    animation: slideUp 0.3s var(--ease);
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .status.success {
+    background: rgba(0, 230, 118, 0.12);
+    color: #00E676;
+    border: 1px solid rgba(0, 230, 118, 0.2);
+    display: block;
+  }
+
+  .status.error {
+    background: rgba(255, 23, 68, 0.12);
+    color: #FF1744;
+    border: 1px solid rgba(255, 23, 68, 0.2);
+    display: block;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 3px;
+    border-radius: 10px;
+    border: 1px solid var(--border-glass);
+  }
+
+  .tab {
+    flex: 1;
+    padding: 8px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    border-radius: 8px;
+    transition: all 0.25s var(--ease);
+  }
+
+  .tab.active {
+    background: var(--accent);
+    color: #f0f2f7;
+    box-shadow: 0 4px 10px var(--accent-glow);
+  }
+
+  .panel {
+    display: none;
+    animation: fadeIn 0.3s var(--ease) both;
+  }
+
+  .panel.active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .checkbox-row input {
+    width: auto;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  small {
+    color: var(--text-muted);
+    font-size: 11px;
+    margin-top: 6px;
+    display: block;
+  }
+
+  /* TRACKER PREMIUM NEON GLASS CARD */
+  .tracker-card {
+    background: linear-gradient(135deg, rgba(124, 77, 255, 0.15) 0%, rgba(0, 229, 255, 0.05) 100%);
+    border: 1px solid rgba(124, 77, 255, 0.3);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 16px;
+    box-shadow: 0 8px 32px 0 rgba(124, 77, 255, 0.15), inset 0 0 12px rgba(0, 229, 255, 0.05);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    animation: slideUp 0.4s var(--ease);
+  }
+  .tracker-card h3 {
+    margin: 0 0 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    letter-spacing: -0.01em;
+  }
+  .tracker-card .badge {
+    background: linear-gradient(135deg, var(--accent) 0%, #6200ea 100%);
+    color: #fff;
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 6px var(--accent-glow);
+  }
+  .tracker-card .progress-bar-bg {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    height: 6px;
+    width: 100%;
+    margin: 8px 0;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+  }
+  .tracker-card .progress-bar-fill {
+    background: linear-gradient(90deg, var(--accent) 0%, #00E5FF 100%);
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.4s var(--ease);
+  }
+  .tracker-card .info-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+  .tracker-card .actions-row {
+    display: flex;
+    gap: 8px;
+  }
+  .tracker-card .actions-row button {
+    margin-top: 0;
+    padding: 8px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+  }
+  .tracker-card .details-drawer {
+    display: none;
+    margin-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    padding-top: 10px;
+    animation: fadeIn 0.3s var(--ease);
+  }
+</style>
+</head>
+<body>
+<h2>📚 BookList Clipper Pro</h2>
+
+<!-- DYNAMIC TRACKER CONTEXT CARD -->
+<div id="tracker-context-card" class="tracker-card" style="display: none;">
+  <h3>
+    <span id="tracker-card-title">📚 Nome do Mangá</span>
+    <span class="badge" id="tracker-card-badge">MANGA</span>
+  </h3>
+  <div class="progress-bar-bg">
+    <div class="progress-bar-fill" id="tracker-card-progress" style="width: 0%;"></div>
+  </div>
+  <div class="info-row">
+    <span id="tracker-card-chapters">Capítulo 0 de 0</span>
+    <span id="tracker-card-percent">0%</span>
+  </div>
+  <div class="actions-row">
+    <button id="btn-tracker-bump" class="secondary" style="flex: 1.2;">➕1 Cap</button>
+    <button id="btn-tracker-caughtup" class="secondary" style="flex: 1.2;">🎯 Em dia</button>
+    <button id="btn-tracker-toggle-details" class="secondary" style="flex: 1;">📝 Detalhes</button>
+  </div>
+  
+  <!-- DETALHES EXPANSÍVEIS -->
+  <div id="tracker-details-drawer" class="details-drawer">
+    <div class="row">
+      <div>
+        <label>Capítulo Atual</label>
+        <input type="number" id="tracker-input-current" min="0" style="margin-top: 4px;">
+      </div>
+      <div>
+        <label>Capítulo Lançado</label>
+        <input type="number" id="tracker-input-latest" min="0" style="margin-top: 4px;">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label>Status</label>
+        <select id="tracker-select-status" style="margin-top: 4px;">
+          <option value="lendo">Lendo</option>
+          <option value="em lancamento">Em lançamento</option>
+          <option value="hiato">Hiato</option>
+          <option value="finalizado">Finalizado</option>
+          <option value="pausado">Pausado</option>
+          <option value="dropado">Dropado</option>
+          <option value="quero ler">Quero ler</option>
+        </select>
+      </div>
+      <div>
+        <label>Nota 0-10</label>
+        <input type="number" id="tracker-input-rating" min="0" max="10" step="0.5" style="margin-top: 4px;">
+      </div>
+    </div>
+    <label style="margin-top: 8px;">Anotação Rápida</label>
+    <textarea id="tracker-textarea-note" placeholder="Onde parei, observações..." style="margin-top: 4px; min-height: 50px;"></textarea>
+    <button id="btn-tracker-save" style="margin-top: 10px;">Salvar Alterações</button>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" data-panel="save">🔖 Bookmark</div>
+  <div class="tab" data-panel="clip">✂️ Clipper</div>
+  <div class="tab" data-panel="config">⚙️</div>
+</div>
+
+<!-- PANEL 1: BOOKMARK -->
+<div class="panel active" id="panel-save">
+  <!-- DYNAMIC BOOKMARK DETECTED ALERT -->
+  <div id="bookmark-alert" class="status success" style="display: none; margin: 0 0 12px; padding: 8px 10px; font-size: 12px; font-weight: 600;">
+    🔖 Link já cadastrado nos seus Bookmarks!
+  </div>
+
+  <label>Título</label>
+  <input id="title" placeholder="Título da página">
+  
+  <label>URL</label>
+  <input id="url" placeholder="https://example.com">
+  
+  <label>Descrição</label>
+  <textarea id="desc" placeholder="Resumo capturado..."></textarea>
+  
+  <div class="row">
+    <div>
+      <label>Pasta</label>
+      <select id="folder-select">
+        <option value="default">Default</option>
+      </select>
+    </div>
+  </div>
+
+  <label>Categorias</label>
+  <div class="cat-chips-container" id="cats-container-bookmark">
+    <small>Carregando categorias...</small>
+  </div>
+
+  <label>Anotação Rápida</label>
+  <textarea id="annotation-bookmark" placeholder="Escreva uma nota rápida sobre este link..."></textarea>
+
+  <button id="btn-save">Salvar Bookmark</button>
+</div>
+
+<!-- PANEL 2: CLIPPER -->
+<div class="panel" id="panel-clip">
+  <label>Modo de Captura</label>
+  <div class="row">
+    <button class="secondary" id="btn-grab-selection">📋 Pegar Seleção</button>
+    <button class="secondary" id="btn-grab-page">📄 Leitura Limpa (MD)</button>
+  </div>
+  
+  <label>Conteúdo da Nota</label>
+  <textarea id="clip-content" placeholder="Use o botão de Leitura Limpa para extrair o artigo formatado em Markdown, ou selecione texto e use 'Pegar Seleção'." style="min-height: 120px; font-family: monospace; font-size: 11px;"></textarea>
+
+  <div class="row">
+    <div>
+      <label>Pasta</label>
+      <select id="folder-select-note">
+        <option value="default">Default</option>
+      </select>
+    </div>
+  </div>
+
+  <label>Categorias</label>
+  <div class="cat-chips-container" id="cats-container-note">
+    <small>Carregando categorias...</small>
+  </div>
+
+  <div class="checkbox-row">
+    <input type="checkbox" id="chk-markdown-mode" checked>
+    <label for="chk-markdown-mode" style="margin-top:0; text-transform:none; font-size:12px; font-weight:normal; letter-spacing:normal;">Salvar em Modo Markdown Puro</label>
+  </div>
+
+  <button id="btn-save-clip">Salvar Nota Clipper</button>
+</div>
+
+<!-- PANEL 3: CONFIG -->
+<div class="panel" id="panel-config">
+  <label>Supabase URL</label>
+  <input id="cfg-url" placeholder="https://xxx.supabase.co">
+  <label>Anon Key</label>
+  <input id="cfg-key" type="password" placeholder="Sua api anon key do Supabase">
+  <label>E-mail</label>
+  <input id="cfg-email" type="email" placeholder="seu-email@dominio.com">
+  <label>Senha</label>
+  <input id="cfg-pass" type="password" placeholder="Sua senha de acesso">
+  <button id="btn-config-save">Salvar e logar</button>
+  <small id="cfg-status" style="display:block;margin-top:8px"></small>
+</div>
+
+<div class="status" id="status"></div>
+
+<script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "booklist-local-first",
+  "private": true,
+  "scripts": {
+    "config:supabase": "node scripts/generate-supabase-config.mjs",
+    "test": "node --test --test-isolation=none",
+    "check:js": "node scripts/check-js.mjs",
+    "pwa:check": "node scripts/pwa-version.mjs --check",
+    "pwa:bump": "node scripts/pwa-version.mjs --bump",
+    "verify:supabase": "node scripts/verify-supabase.mjs",
+    "check": "npm run config:supabase && npm run check:js && npm run pwa:check && npm test"
+  }
+}

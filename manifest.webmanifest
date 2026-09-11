@@ -1,0 +1,20 @@
+{
+  "name": "BookList",
+  "short_name": "BookList",
+  "description": "Links, notas e sincronizacao local-first.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#0a0e1a",
+  "theme_color": "#7C4DFF",
+  "categories": ["productivity", "books", "utilities"],
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    }
+  ]
+}
